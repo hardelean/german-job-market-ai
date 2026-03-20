@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Exposition des deutschen Arbeitsmarktes</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #12121a;
+  --fg: #e0e0e8;
+  --fg2: #888894;
+  --border: rgba(255,255,255,0.06);
+  --hbar-track: rgba(255,255,255,0.04);
+  --accent: #4a9eff;
+  --accent2: #ffb347;
+  --sidebar-w: 260px;
+}
+body.light {
+  --bg: #f2f2f7;
+  --bg2: #ffffff;
+  --fg: #1a1a2e;
+  --fg2: #6b6b80;
+  --border: rgba(0,0,0,0.08);
+  --hbar-track: rgba(0,0,0,0.06);
+  --accent: #0070f3;
+  --accent2: #e68a00;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 14px 14px;
+  z-index: 10;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.sidebar-brand { flex: 1; min-width: 0; }
+#sidebar h1 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  padding-right: 4px;
+}
+#sidebar .subtitle {
+  font-size: 9px;
+  color: var(--fg2);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+#sidebar .subtitle a { color: var(--fg2); text-decoration: none; }
+#sidebar .subtitle a:hover { color: var(--fg); }
+
+/* Top button row */
+.top-btns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.icon-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--fg2);
+  transition: all 0.15s;
+}
+.icon-btn:hover { color: var(--fg); background: var(--hbar-track); border-color: rgba(128,128,128,0.3); }
+
+/* Methodology + About links */
+.methodology-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: rgba(74,158,255,0.08);
+  border: 1px solid rgba(74,158,255,0.3);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+  text-align: center;
+}
+.methodology-btn:hover {
+  background: rgba(74,158,255,0.16);
+  border-color: rgba(74,158,255,0.5);
+}
+body.light .methodology-btn {
+  background: rgba(0,112,243,0.06);
+  border-color: rgba(0,112,243,0.25);
+}
+
+/* Range slider */
+.range-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.range-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.range-row-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--fg2);
+}
+.range-row-label strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+input[type=range].score-slider {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  margin: 0;
+}
+.range-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--fg2);
+  padding: 4px 0 0;
+}
+.range-display .rdval {
+  color: var(--fg);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.stat-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.stat-section h3 {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg2);
+}
+.stat-big {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  color: var(--fg2);
+}
+
+.tier-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tier-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+}
+.tier-color {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.tier-name {
+  flex: 1;
+  color: var(--fg2);
+}
+.tier-jobs {
+  text-align: right;
+  white-space: nowrap;
+}
+.tier-pct {
+  text-align: right;
+  width: 30px;
+  color: var(--fg2);
+  font-size: 9px;
+}
+
+.histogram {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 40px;
+}
+.histogram .bar {
+  flex: 1;
+  border-radius: 1px 1px 0 0;
+  min-height: 1px;
+}
+.hist-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: var(--fg2);
+  margin-top: 2px;
+}
+
+.hbar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hbar-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+}
+.hbar-label {
+  width: 80px;
+  flex-shrink: 0;
+  color: var(--fg2);
+  font-size: 9px;
+  text-align: right;
+}
+.hbar-track {
+  flex: 1;
+  height: 9px;
+  background: var(--hbar-track);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.hbar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+.hbar-val {
+  width: 22px;
+  flex-shrink: 0;
+  font-size: 9px;
+  color: var(--fg);
+  text-align: right;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+}
+.view-toggle button {
+  flex: 1;
+  padding: 5px 0;
+  font-size: 9px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.view-toggle button.active {
+  background: var(--hbar-track);
+  color: var(--fg);
+  border-color: rgba(128,128,128,0.25);
+}
+.view-toggle button:hover:not(.active) {
+  background: var(--hbar-track);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.filter-chip {
+  padding: 3px 7px;
+  font-size: 9px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--fg2);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.filter-chip.active {
+  background: var(--hbar-track);
+  color: var(--fg);
+  border-color: rgba(128,128,128,0.3);
+}
+.filter-chip:hover:not(.active) {
+  background: var(--hbar-track);
+  color: var(--fg);
+}
+
+.gradient-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: var(--fg2);
+}
+.gradient-legend canvas {
+  border-radius: 2px;
+}
+
+canvas#canvas {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  cursor: default;
+}
+
+#tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 360px;
+  opacity: 0;
+  transition: opacity 0.12s;
+  z-index: 20;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+#tooltip.visible { opacity: 1; }
+#tooltip .tt-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+  color: var(--fg);
+}
+#tooltip .tt-subtitle {
+  font-size: 11px;
+  color: var(--fg2);
+  margin-bottom: 6px;
+}
+#tooltip .tt-exposure {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+#tooltip .tt-stats {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 12px;
+  font-size: 11px;
+}
+#tooltip .tt-stats .label { color: var(--fg2); }
+#tooltip .tt-stats .value { color: var(--fg); text-align: right; }
+#tooltip .tt-rationale {
+  font-size: 10px;
+  color: var(--fg2);
+  margin-top: 8px;
+  line-height: 1.4;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+/* EU context panel */
+.eu-section {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.eu-flag {
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 3px;
+}
+.eu-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.eu-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+}
+.eu-bar-label {
+  width: 28px;
+  flex-shrink: 0;
+  color: var(--fg2);
+  text-align: right;
+  font-weight: 500;
+}
+.eu-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--hbar-track);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.eu-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+.eu-bar-val {
+  width: 30px;
+  flex-shrink: 0;
+  font-size: 9px;
+  color: var(--fg2);
+  text-align: right;
+}
+
+/* Scatter legend */
+.scatter-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 9px;
+  color: var(--fg2);
+}
+.scatter-legend .leg-gradient {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.scatter-legend canvas { border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+
+  <div class="sidebar-top">
+    <div class="sidebar-brand">
+      <h1 id="mainTitle">KI-Exposition des deutschen Arbeitsmarktes</h1>
+      <div class="subtitle" id="mainSubtitle">
+        <span class="occ-count"></span> Berufe · Farbe = KI-Exposition<br>
+        <a href="https://www.arbeitsagentur.de">Bundesagentur</a> &amp;
+        <a href="https://www.destatis.de">Destatis</a> · KldB 2010 ·
+        <a href="https://ec.europa.eu/eurostat">Eurostat</a>
+      </div>
+    </div>
+    <div class="top-btns">
+      <button class="icon-btn" id="langToggle" onclick="toggleLang()" title="DE ↔ EN">DE</button>
+      <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">🌙</button>
+    </div>
+  </div>
+
+  <a href="about.html" class="methodology-btn" id="methodologyBtn">📊 Methodik &amp; Statistiken</a>
+
+  <div class="view-toggle">
+    <button class="active" onclick="setView('treemap')" id="btnTreemap">Treemap</button>
+    <button onclick="setView('scatter')" id="btnScatter">Exposition vs. Ausblick</button>
+  </div>
+
+  <div class="stat-section" id="scoreRangeSection" style="display:none;">
+    <h3 class="i18n" data-de="Expositions-Bereich" data-en="Exposure score range">Expositions-Bereich</h3>
+    <div class="range-block">
+      <div class="range-row">
+        <div class="range-row-label"><span>Min</span><strong id="rangeMinLabel">1</strong></div>
+        <input type="range" class="score-slider" id="rangeMin" min="1" max="10" value="1" oninput="onRangeChange()">
+      </div>
+      <div class="range-row">
+        <div class="range-row-label"><span>Max</span><strong id="rangeMaxLabel">10</strong></div>
+        <input type="range" class="score-slider" id="rangeMax" min="1" max="10" value="10" oninput="onRangeChange()">
+      </div>
+      <div class="range-display">
+        <span class="i18n" data-de="Zeige Scores" data-en="Showing scores">Zeige Scores</span>
+        <span class="rdval" id="rangeDisplayMin">1</span>–<span class="rdval" id="rangeDisplayMax">10</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Filter" data-en="Filter">Filter</h3>
+    <div class="filter-chips" id="filterChips"></div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Gesamtbeschäftigung" data-en="Total employment">Gesamtbeschäftigung</h3>
+    <div class="stat-big" id="statTotalJobs">—</div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Gewichtete Ø-Exposition" data-en="Weighted avg. exposure">Gewichtete Ø-Exposition</h3>
+    <div class="stat-big" id="statAvgExposure">—</div>
+    <div class="stat-label i18n" data-de="beschäftigungsgewichtet, 0–10 Skala" data-en="employment-weighted, 0–10 scale">beschäftigungsgewichtet, 0–10 Skala</div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Beschäftigung nach Expositions-Stufe" data-en="Jobs by exposure tier">Beschäftigung nach Expositions-Stufe</h3>
+    <div class="histogram" id="histogram"></div>
+    <div class="hist-labels"><span>0</span><span>5</span><span>10</span></div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Aufschlüsselung" data-en="Breakdown">Aufschlüsselung</h3>
+    <div class="tier-bar" id="tierBar"></div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Exposition nach Gehalt" data-en="Exposure by pay">Exposition nach Gehalt</h3>
+    <div class="hbar-chart" id="payChart"></div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Exposition nach Qualifikation" data-en="Exposure by qualification">Exposition nach Qualifikation</h3>
+    <div class="hbar-chart" id="eduChart"></div>
+  </div>
+
+  <div class="stat-section">
+    <h3 class="i18n" data-de="Löhne in hochexponierten Jobs (7+)" data-en="Wages in high-exposure jobs (7+)">Löhne in hochexponierten Jobs (7+)</h3>
+    <div class="stat-big" id="statWages">—</div>
+    <div class="stat-label i18n" data-de="jährliche EUR-Lohnsumme gefährdet" data-en="total annual EUR payroll at risk">jährliche EUR-Lohnsumme gefährdet</div>
+  </div>
+
+  <!-- EU Context Section -->
+  <div class="stat-section eu-section">
+    <h3><span class="eu-flag">🇪🇺</span> <span class="i18n" data-de="EU-Vergleich" data-en="EU comparison">EU-Vergleich</span></h3>
+    <div class="eu-bar-chart" id="euChart"></div>
+    <div class="stat-label" style="margin-top:4px;">
+      <span class="i18n" data-de="Beschäftigungsanteil DE an EU:" data-en="DE share of EU employment:">Beschäftigungsanteil DE an EU:</span>
+      <strong id="euSharePct">—</strong>
+    </div>
+  </div>
+
+  <div class="gradient-legend">
+    <span class="i18n" data-de="Niedriges KI-Risiko" data-en="Low AI risk">Niedriges KI-Risiko</span>
+    <canvas id="gradientLegend" width="80" height="8"></canvas>
+    <span class="i18n" data-de="Hoch" data-en="High">Hoch</span>
+  </div>
+
+  <div class="scatter-legend" id="scatterLegend" style="display:none;">
+    <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--fg2);">
+      <span class="i18n" data-de="Ausblick-Farbe" data-en="Outlook colour">Ausblick-Farbe</span>
+    </div>
+    <div class="leg-gradient">
+      <span class="i18n" data-de="Überhang" data-en="Surplus">Überhang</span>
+      <canvas id="outlookLegend" width="80" height="8"></canvas>
+      <span class="i18n" data-de="Mangel" data-en="Shortage">Mangel</span>
+    </div>
+    <div style="font-size:9px;color:var(--fg2);margin-top:1px;">
+      <span class="i18n" data-de="Spaltenbreite = Beschäftigungsanteil" data-en="Column width = employment share">Spaltenbreite = Beschäftigungsanteil</span>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<div id="tooltip">
+  <div class="tt-title"></div>
+  <div class="tt-subtitle"></div>
+  <div class="tt-exposure"></div>
+  <div class="tt-stats"></div>
+  <div class="tt-rationale"></div>
+</div>
+
+<script>
+
+// ── i18n ─────────────────────────────────────────────────────────────────
+
+let lang = localStorage.getItem("lang") || "de";
+
+const I18N = {
+  title: { de: "KI-Exposition des deutschen Arbeitsmarktes", en: "AI Exposure of the German Job Market" },
+  methodology: { de: "📊 Methodik & Statistiken", en: "📊 Methodology & Stats" },
+  treemap: { de: "Treemap", en: "Treemap" },
+  scatter: { de: "Exposition vs. Ausblick", en: "Exposure vs. Outlook" },
+  tierNames: {
+    de: ["Minimal", "Niedrig", "Moderat", "Hoch", "Sehr hoch"],
+    en: ["Minimal", "Low", "Moderate", "High", "Very high"],
+  },
+};
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.getElementById("langToggle").textContent = lang.toUpperCase();
+  document.getElementById("mainTitle").textContent = I18N.title[lang];
+  document.getElementById("methodologyBtn").innerHTML = I18N.methodology[lang];
+  document.getElementById("btnTreemap").textContent = I18N.treemap[lang];
+  document.getElementById("btnScatter").textContent = I18N.scatter[lang];
+
+  document.querySelectorAll(".i18n").forEach(el => {
+    const text = el.getAttribute("data-" + lang);
+    if (text) el.textContent = text;
+  });
+
+  // Update subtitle with occupation count
+  const count = allData.length;
+  const sub = document.getElementById("mainSubtitle");
+  if (sub) {
+    const occSpans = sub.querySelectorAll(".occ-count");
+    occSpans.forEach(s => s.textContent = count);
+  }
+
+  buildFilterChips();
+  computeStats();
+  buildEUChart();
+}
+
+function toggleLang() {
+  lang = lang === "de" ? "en" : "de";
+  localStorage.setItem("lang", lang);
+  applyLang();
+  if (rects.length || colRects.length) {
+    if (currentView === "treemap") draw(); else drawColumns();
+  }
+}
+
+function t(d, field) {
+  // Get localized field value
+  const key = field + "_" + lang;
+  return d[key] || d[field + "_en"] || d[field + "_de"] || "";
+}
+
+// ── Theme ────────────────────────────────────────────────────────────────
+
+let isLight = localStorage.getItem("theme") === "light";
+if (isLight) document.body.classList.add("light");
+
+function applyTheme() {
+  document.body.classList.toggle("light", isLight);
+  document.getElementById("themeToggle").textContent = isLight ? "🌙" : "☀️";
+  if (rects.length || colRects.length) {
+    if (currentView === "treemap") draw(); else drawColumns();
+  }
+  drawGradientLegend();
+  drawOutlookLegend();
+}
+
+function toggleTheme() {
+  isLight = !isLight;
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+  applyTheme();
+}
+
+function canvasBg() { return isLight ? "#f2f2f7" : "#0a0a0f"; }
+function labelPrimary(hov) { return isLight ? (hov ? "rgba(0,0,0,0.95)" : "rgba(0,0,0,0.85)") : (hov ? "#fff" : "rgba(255,255,255,0.9)"); }
+function labelSecondary() { return isLight ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.55)"; }
+function labelTertiary() { return isLight ? "rgba(0,0,0,0.35)" : "rgba(255,255,255,0.4)"; }
+function hoverStroke() { return isLight ? "rgba(0,0,0,0.8)" : "#fff"; }
+function cellAlpha(hov) { return hov ? (isLight ? 0.92 : 0.85) : (isLight ? 0.72 : 0.55); }
+
+// ── Filters ──────────────────────────────────────────────────────────────
+
+const FILTERS = {
+  de: [
+    { id: "all",       label: "Alle",           fn: () => true },
+    { id: "shortage",  label: "🔴 Mangel",      fn: d => d.outlook_desc_de && d.outlook_desc_de.includes("Mangel") },
+    { id: "surplus",   label: "⬇ Überhang",    fn: d => d.outlook_desc_de && d.outlook_desc_de.includes("Überhang") },
+    { id: "highpay",   label: "💰 €60K+",       fn: d => d.pay && d.pay >= 60000 },
+    { id: "health",    label: "🏥 Gesundheit",  fn: d => d.category_de && d.category_de.includes("Gesundheit") },
+    { id: "it",        label: "💻 IT",           fn: d => d.category_de && d.category_de.includes("Informatik") },
+    { id: "trades",    label: "🔧 Handwerk",    fn: d => d.category_de && (d.category_de.includes("Bau") || d.category_de.includes("Produktion")) },
+    { id: "business",  label: "📊 Verwaltung",  fn: d => d.category_de && d.category_de.includes("Unternehmens") },
+    { id: "highexp",   label: "🤖 Hohe KI",     fn: d => d.exposure != null && d.exposure >= 7 },
+    { id: "lowexp",    label: "🛡 Niedrige KI", fn: d => d.exposure != null && d.exposure <= 2 },
+  ],
+  en: [
+    { id: "all",       label: "All",             fn: () => true },
+    { id: "shortage",  label: "🔴 Shortage",     fn: d => d.outlook_desc_en && d.outlook_desc_en.includes("Shortage") },
+    { id: "surplus",   label: "⬇ Surplus",      fn: d => d.outlook_desc_en && d.outlook_desc_en.includes("Surplus") },
+    { id: "highpay",   label: "💰 €60K+",        fn: d => d.pay && d.pay >= 60000 },
+    { id: "health",    label: "🏥 Health",       fn: d => d.category_en && d.category_en.includes("Health") },
+    { id: "it",        label: "💻 IT",            fn: d => d.category_en && d.category_en.includes("IT") },
+    { id: "trades",    label: "🔧 Trades",       fn: d => d.category_en && (d.category_en.includes("Construct") || d.category_en.includes("Manufactur")) },
+    { id: "business",  label: "📊 Admin",        fn: d => d.category_en && d.category_en.includes("Corporate") },
+    { id: "highexp",   label: "🤖 High AI",      fn: d => d.exposure != null && d.exposure >= 7 },
+    { id: "lowexp",    label: "🛡 Low AI",       fn: d => d.exposure != null && d.exposure <= 2 },
+  ],
+};
+
+let activeFilter = "all";
+let allData = [];
+let data = [];
+let euContext = {};
+
+function buildFilterChips() {
+  const el = document.getElementById("filterChips");
+  const filters = FILTERS[lang] || FILTERS.de;
+  el.innerHTML = filters.map(f =>
+    `<button class="filter-chip${f.id === activeFilter ? ' active' : ''}" onclick="setFilter('${f.id}')">${f.label}</button>`
+  ).join("");
+}
+
+function setFilter(id) {
+  activeFilter = id;
+  const filters = FILTERS[lang] || FILTERS.de;
+  const f = filters.find(f => f.id === id);
+  data = f ? allData.filter(f.fn) : allData;
+  buildFilterChips();
+  computeStats();
+  hovered = null;
+  hideTooltip();
+  resize();
+}
+
+// ── Exposure color scale ─────────────────────────────────────────────────
+
+function exposureColor(score) {
+  if (score == null) return [128, 128, 128];
+  const t = Math.max(0, Math.min(10, score)) / 10;
+  let r, g, b;
+  if (t < 0.5) {
+    const s = t / 0.5;
+    r = Math.round(50 + s * 180);
+    g = Math.round(160 - s * 10);
+    b = Math.round(50 - s * 20);
+  } else {
+    const s = (t - 0.5) / 0.5;
+    r = Math.round(230 + s * 25);
+    g = Math.round(150 - s * 110);
+    b = Math.round(30 - s * 10);
+  }
+  return [r, g, b];
+}
+
+function exposureColorCSS(score, alpha) {
+  const [r, g, b] = exposureColor(score);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function outlookColorCSS(outlook, alpha) {
+  if (outlook == null) return `rgba(128,128,128,${alpha})`;
+  const t = Math.max(0, Math.min(1, (outlook + 12) / 24));
+  let r, g, b;
+  if (t < 0.5) {
+    const s = t / 0.5;
+    r = Math.round(220 - s * 40);
+    g = Math.round(60 + s * 100);
+    b = Math.round(50 - s * 20);
+  } else {
+    const s = (t - 0.5) / 0.5;
+    r = Math.round(180 - s * 130);
+    g = Math.round(160 + s * 10);
+    b = Math.round(30 + s * 30);
+  }
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// ── Squarified treemap ───────────────────────────────────────────────────
+
+function squarify(items, x, y, w, h) {
+  if (items.length === 0) return [];
+  if (items.length === 1) return [{ ...items[0], rx: x, ry: y, rw: w, rh: h }];
+  const total = items.reduce((s, d) => s + d.value, 0);
+  if (total === 0) return [];
+  const results = [];
+  let remaining = [...items];
+  let cx = x, cy = y, cw = w, ch = h;
+  while (remaining.length > 0) {
+    const remTotal = remaining.reduce((s, d) => s + d.value, 0);
+    const vertical = cw >= ch;
+    const side = vertical ? ch : cw;
+    let row = [remaining[0]];
+    let rowSum = remaining[0].value;
+    for (let i = 1; i < remaining.length; i++) {
+      const candidate = [...row, remaining[i]];
+      const candidateSum = rowSum + remaining[i].value;
+      if (worstAspect(candidate, candidateSum, side, remTotal, vertical ? cw : ch) <
+          worstAspect(row, rowSum, side, remTotal, vertical ? cw : ch)) {
+        row = candidate;
+        rowSum = candidateSum;
+      } else break;
+    }
+    const rowFraction = rowSum / remTotal;
+    const rowThickness = vertical ? cw * rowFraction : ch * rowFraction;
+    let offset = 0;
+    for (const item of row) {
+      const itemFraction = item.value / rowSum;
+      const itemLength = side * itemFraction;
+      if (vertical) results.push({ ...item, rx: cx, ry: cy + offset, rw: rowThickness, rh: itemLength });
+      else results.push({ ...item, rx: cx + offset, ry: cy, rw: itemLength, rh: rowThickness });
+      offset += itemLength;
+    }
+    if (vertical) { cx += rowThickness; cw -= rowThickness; }
+    else { cy += rowThickness; ch -= rowThickness; }
+    remaining = remaining.slice(row.length);
+  }
+  return results;
+}
+
+function worstAspect(row, rowSum, side, totalArea, availableExtent) {
+  const rowExtent = availableExtent * (rowSum / totalArea);
+  if (rowExtent === 0) return Infinity;
+  let worst = 0;
+  for (const item of row) {
+    const itemLen = side * (item.value / rowSum);
+    if (itemLen === 0) continue;
+    const aspect = Math.max(rowExtent / itemLen, itemLen / rowExtent);
+    if (aspect > worst) worst = aspect;
+  }
+  return worst;
+}
+
+// ── Rendering ────────────────────────────────────────────────────────────
+
+let rects = [];
+let hovered = null;
+let currentView = "treemap";
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+let dpr = window.devicePixelRatio || 1;
+
+const MARGIN = 12;
+const GAP = 1.5;
+
+let scatterMin = 1, scatterMax = 10;
+
+function onRangeChange() {
+  let mn = parseInt(document.getElementById("rangeMin").value);
+  let mx = parseInt(document.getElementById("rangeMax").value);
+  if (mn > mx) {
+    if (document.activeElement === document.getElementById("rangeMin")) mn = mx;
+    else mx = mn;
+    document.getElementById("rangeMin").value = mn;
+    document.getElementById("rangeMax").value = mx;
+  }
+  scatterMin = mn;
+  scatterMax = mx;
+  document.getElementById("rangeMinLabel").textContent = mn;
+  document.getElementById("rangeMaxLabel").textContent = mx;
+  document.getElementById("rangeDisplayMin").textContent = mn;
+  document.getElementById("rangeDisplayMax").textContent = mx;
+  hovered = null;
+  hideTooltip();
+  layoutColumns();
+  drawColumns();
+}
+
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll(".view-toggle button").forEach(b => b.classList.remove("active"));
+  if (view === "treemap") document.getElementById("btnTreemap").classList.add("active");
+  else document.getElementById("btnScatter").classList.add("active");
+  document.getElementById("scatterLegend").style.display = view === "scatter" ? "" : "none";
+  document.getElementById("scoreRangeSection").style.display = view === "scatter" ? "" : "none";
+  hovered = null;
+  hideTooltip();
+  resize();
+}
+
+function layout() {
+  const sidebarW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w'));
+  const w = window.innerWidth - sidebarW;
+  const h = window.innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + "px";
+  canvas.style.height = h + "px";
+
+  const catKey = "category_" + lang;
+  const byCategory = {};
+  for (const d of data) {
+    const cat = d[catKey] || d.category_de;
+    if (!byCategory[cat]) byCategory[cat] = [];
+    byCategory[cat].push(d);
+  }
+
+  const categories = Object.keys(byCategory).map(cat => ({
+    cat,
+    items: byCategory[cat].sort((a, b) => (b.jobs || 0) - (a.jobs || 0)),
+    value: byCategory[cat].reduce((s, d) => s + (d.jobs || 1), 0),
+  })).sort((a, b) => b.value - a.value);
+
+  const catRects = squarify(categories, MARGIN, MARGIN, w - MARGIN*2, h - MARGIN*2);
+
+  rects = [];
+  for (const cr of catRects) {
+    const items = cr.items.map(d => ({ ...d, value: d.jobs || 1 }));
+    const innerRects = squarify(items, cr.rx + GAP, cr.ry + GAP, cr.rw - GAP*2, cr.rh - GAP*2);
+    for (const ir of innerRects) rects.push(ir);
+  }
+}
+
+function draw() {
+  const w = canvas.width, h = canvas.height;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = canvasBg();
+  ctx.fillRect(0, 0, w/dpr, h/dpr);
+
+  for (const r of rects) {
+    const isHovered = r === hovered;
+    const g = GAP / 2;
+    const rx = r.rx + g, ry = r.ry + g, rw = r.rw - g*2, rh = r.rh - g*2;
+    if (rw <= 0 || rh <= 0) continue;
+
+    ctx.fillStyle = exposureColorCSS(r.exposure, cellAlpha(isHovered));
+    ctx.fillRect(rx, ry, rw, rh);
+
+    if (isHovered) {
+      ctx.strokeStyle = hoverStroke();
+      ctx.lineWidth = 2;
+      ctx.strokeRect(rx, ry, rw, rh);
+    }
+
+    if (rw > 36 && rh > 14) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(rx + 3, ry + 2, rw - 6, rh - 4);
+      ctx.clip();
+
+      const fontSize = Math.min(13, Math.max(8, Math.min(rw / 9, rh / 2.5)));
+      ctx.font = `500 ${fontSize}px -apple-system, system-ui, sans-serif`;
+      ctx.fillStyle = labelPrimary(isHovered);
+      ctx.textBaseline = "top";
+
+      let title = t(r, "title");
+      const maxW = rw - 8;
+      while (title.length > 4 && ctx.measureText(title).width > maxW) title = title.slice(0, -1);
+      if (title !== t(r, "title")) title = title.slice(0, -1) + "…";
+      ctx.fillText(title, rx + 4, ry + 3);
+
+      if (rh > 26 && rw > 48) {
+        const score = r.exposure != null ? r.exposure + "/10" : "–";
+        const jobs = r.jobs ? formatNumber(r.jobs) + (lang === "de" ? " Besch." : " jobs") : "";
+        const line2 = score + (jobs ? " · " + jobs : "");
+        const fs2 = Math.max(7, fontSize - 2);
+        ctx.font = `400 ${fs2}px -apple-system, system-ui, sans-serif`;
+        ctx.fillStyle = labelSecondary();
+        ctx.fillText(line2, rx + 4, ry + 3 + fontSize + 2);
+      }
+
+      if (rh > 42 && rw > 60 && r.pay) {
+        const payStr = "€" + Math.round(r.pay / 1000) + "K/" + (lang === "de" ? "Jahr" : "yr");
+        const fs3 = Math.max(7, fontSize - 2);
+        ctx.font = `400 ${fs3}px -apple-system, system-ui, sans-serif`;
+        ctx.fillStyle = labelTertiary();
+        ctx.fillText(payStr, rx + 4, ry + 3 + fontSize * 2 + 4);
+      }
+
+      ctx.restore();
+    }
+  }
+}
+
+function hitTest(mx, my) {
+  const sidebarW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w'));
+  const cx = mx - sidebarW, cy = my;
+  for (let i = rects.length - 1; i >= 0; i--) {
+    const r = rects[i];
+    if (cx >= r.rx && cx < r.rx + r.rw && cy >= r.ry && cy < r.ry + r.rh) return r;
+  }
+  return null;
+}
+
+function formatNumber(n) {
+  if (n == null) return "—";
+  if (n >= 1000000) return (n/1000000).toFixed(1) + "M";
+  if (n >= 1000) return Math.round(n/1000) + "K";
+  return n.toLocaleString();
+}
+
+function formatPay(n) {
+  if (n == null) return "—";
+  return "€" + n.toLocaleString() + "/" + (lang === "de" ? "Jahr" : "yr");
+}
+
+function showTooltip(d, mx, my) {
+  const tt = document.getElementById("tooltip");
+  const titleDE = d.title_de;
+  const titleEN = d.title_en;
+
+  if (lang === "de") {
+    tt.querySelector(".tt-title").textContent = titleDE;
+    tt.querySelector(".tt-subtitle").textContent = titleEN;
+  } else {
+    tt.querySelector(".tt-title").textContent = titleEN;
+    tt.querySelector(".tt-subtitle").textContent = titleDE;
+  }
+
+  const score = d.exposure != null ? d.exposure : null;
+  if (score != null) {
+    const color = exposureColorCSS(score, 1);
+    const barBg = isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)";
+    const label = lang === "de" ? "KI-Exposition" : "AI Exposure";
+    tt.querySelector(".tt-exposure").innerHTML =
+      `<span style="color:${color};font-weight:600;">${label}: ${score}/10</span>` +
+      `<div style="margin-top:3px;height:4px;background:${barBg};border-radius:2px;">` +
+      `<div style="height:100%;width:${score*10}%;background:${color};border-radius:2px;"></div></div>`;
+  } else {
+    tt.querySelector(".tt-exposure").innerHTML = "";
+  }
+
+  const eduText = t(d, "education");
+  const outlookText = t(d, "outlook_desc");
+  const catText = t(d, "category");
+  const payLabel = lang === "de" ? "Mediangehalt" : "Median pay";
+  const jobsLabel = lang === "de" ? "Beschäftigte 2023" : "Employment 2023";
+  const outlookLabel = lang === "de" ? "Ausblick" : "Outlook";
+  const eduLabel = lang === "de" ? "Qualifikation" : "Education";
+  const catLabel = lang === "de" ? "Berufsbereich" : "Category";
+  const codeLabel = "KldB 2010";
+
+  tt.querySelector(".tt-stats").innerHTML = `
+    <span class="label">${payLabel}</span><span class="value">${formatPay(d.pay)}</span>
+    <span class="label">${jobsLabel}</span><span class="value">${formatNumber(d.jobs)}</span>
+    <span class="label">${outlookLabel}</span><span class="value">${outlookText || "—"}</span>
+    <span class="label">${eduLabel}</span><span class="value" style="text-align:right;font-size:10px;">${eduText || "—"}</span>
+    <span class="label">${catLabel}</span><span class="value" style="text-align:right;font-size:9px;">${catText}</span>
+    <span class="label">${codeLabel}</span><span class="value">${d.kldb_code || "—"}</span>
+  `;
+
+  tt.querySelector(".tt-rationale").textContent = d.exposure_rationale || "";
+
+  const pad = 16;
+  let tx = mx + pad, ty = my - pad;
+  if (tx + 360 > window.innerWidth) tx = mx - 360 - pad;
+  if (ty < 10) ty = my + pad;
+  if (ty + 240 > window.innerHeight) ty = my - 240;
+  tt.style.left = tx + "px";
+  tt.style.top = ty + "px";
+  tt.classList.add("visible");
+}
+
+function hideTooltip() {
+  document.getElementById("tooltip").classList.remove("visible");
+}
+
+// ── Column / scatter view ────────────────────────────────────────────────
+
+let colRects = [];
+
+function layoutColumns() {
+  const sidebarW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w'));
+  const w = window.innerWidth - sidebarW;
+  const h = window.innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + "px";
+  canvas.style.height = h + "px";
+
+  const pad = { top: 20, bottom: 24, left: 4, right: 4 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+  const colGap = 2;
+
+  const byExposure = {};
+  let totalJobs = 0;
+  for (const d of data) {
+    if (d.exposure == null) continue;
+    if (d.exposure < scatterMin || d.exposure > scatterMax) continue;
+    if (!byExposure[d.exposure]) byExposure[d.exposure] = [];
+    byExposure[d.exposure].push(d);
+    totalJobs += d.jobs || 0;
+  }
+
+  const scores = Object.keys(byExposure).map(Number).sort((a, b) => a - b);
+  const colJobTotals = scores.map(s => byExposure[s].reduce((sum, d) => sum + (d.jobs || 0), 0));
+  const totalGap = colGap * (scores.length - 1);
+  const availW = plotW - totalGap;
+
+  colRects = [];
+  let cx = pad.left;
+
+  for (let i = 0; i < scores.length; i++) {
+    const score = scores[i];
+    const items = byExposure[score];
+    const colJobs = colJobTotals[i];
+    const colW = (colJobs / totalJobs) * availW;
+
+    items.sort((a, b) => (b.outlook || 0) - (a.outlook || 0));
+
+    let cy = pad.top;
+    for (const d of items) {
+      const jobs = d.jobs || 0;
+      const itemH = colJobs > 0 ? (jobs / colJobs) * plotH : 0;
+      if (itemH < 0.3) { cy += itemH; continue; }
+      colRects.push({ ...d, rx: cx, ry: cy, rw: colW, rh: itemH });
+      cy += itemH;
+    }
+    cx += colW + colGap;
+  }
+
+  colRects._meta = { scores, pad, colJobTotals, totalJobs, availW, plotH, colGap };
+}
+
+function shortOutlook(d) {
+  const desc = t(d, "outlook_desc");
+  if (!desc) return "";
+  if (lang === "de") {
+    if (desc.includes("Starker") && desc.includes("Mangel")) return "Starker Mangel";
+    if (desc.includes("Mangel")) return "Mangel";
+    if (desc.includes("Starker") && desc.includes("Überhang")) return "Starker Überh.";
+    if (desc.includes("Überhang")) return "Überh.";
+    if (desc.includes("Ausgeglichen")) return "Ausgegl.";
+    return desc;
+  }
+  if (desc.includes("Severe") && desc.includes("Shortage")) return "Severe shortage";
+  if (desc.includes("Shortage")) return "Shortage";
+  if (desc.includes("Strong") && desc.includes("Surplus")) return "Strong surplus";
+  if (desc.includes("Surplus")) return "Surplus";
+  if (desc === "Balanced") return "Balanced";
+  return desc;
+}
+
+function drawColumns() {
+  const w = canvas.width, h = canvas.height;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = canvasBg();
+  ctx.fillRect(0, 0, w/dpr, h/dpr);
+
+  const meta = colRects._meta;
+  if (!meta) return;
+
+  ctx.font = "600 11px -apple-system, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+  let hx = meta.pad.left;
+  for (let i = 0; i < meta.scores.length; i++) {
+    const colW = (meta.colJobTotals[i] / meta.totalJobs) * meta.availW;
+    if (colW > 14) {
+      ctx.fillStyle = exposureColorCSS(meta.scores[i], 0.85);
+      ctx.fillText(meta.scores[i], hx + colW/2, meta.pad.top - 3);
+    }
+    hx += colW + meta.colGap;
+  }
+
+  ctx.fillStyle = isLight ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.35)";
+  ctx.font = "11px -apple-system, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  const xLabel = lang === "de" ? "KI-Expositions-Score →" : "AI Exposure score →";
+  ctx.fillText(xLabel, meta.pad.left + meta.availW/2, meta.pad.top + meta.plotH + 6);
+
+  const gap = 0.5;
+  for (const r of colRects) {
+    const isHovered = r === hovered;
+    const rx = r.rx + gap, ry = r.ry + gap, rw = r.rw - gap*2, rh = r.rh - gap*2;
+    if (rw <= 0 || rh <= 0) continue;
+
+    ctx.fillStyle = outlookColorCSS(r.outlook, cellAlpha(isHovered));
+    ctx.fillRect(rx, ry, rw, rh);
+
+    if (isHovered) {
+      ctx.strokeStyle = hoverStroke();
+      ctx.lineWidth = 2;
+      ctx.strokeRect(rx, ry, rw, rh);
+    }
+
+    if (rw > 36 && rh > 12) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(rx + 3, ry + 1, rw - 6, rh - 2);
+      ctx.clip();
+
+      const fontSize = Math.min(12, Math.max(7, Math.min(rw/10, rh/2.5)));
+      ctx.font = `500 ${fontSize}px -apple-system, system-ui, sans-serif`;
+      ctx.fillStyle = labelPrimary(isHovered);
+      ctx.textBaseline = "top";
+      ctx.textAlign = "left";
+
+      let title = t(r, "title");
+      const origTitle = title;
+      const maxW = rw - 6;
+      while (title.length > 4 && ctx.measureText(title).width > maxW) title = title.slice(0, -1);
+      if (title !== origTitle) title = title.slice(0, -1) + "…";
+      ctx.fillText(title, rx + 4, ry + 2);
+
+      if (rh > 24 && rw > 48) {
+        const outlookText = shortOutlook(r);
+        const jobs = r.jobs ? "· " + formatNumber(r.jobs) : "";
+        const fs2 = Math.max(7, fontSize - 2);
+        ctx.font = `400 ${fs2}px -apple-system, system-ui, sans-serif`;
+        ctx.fillStyle = labelSecondary();
+        ctx.fillText([outlookText, jobs].filter(Boolean).join(" "), rx + 4, ry + 2 + fontSize + 2);
+      }
+
+      if (rh > 40 && rw > 60 && r.pay) {
+        const fs3 = Math.max(7, fontSize - 2);
+        ctx.font = `400 ${fs3}px -apple-system, system-ui, sans-serif`;
+        ctx.fillStyle = labelTertiary();
+        ctx.fillText("€" + Math.round(r.pay/1000) + "K", rx + 4, ry + 2 + fontSize * 2 + 4);
+      }
+
+      ctx.restore();
+    }
+  }
+}
+
+function hitTestColumns(mx, my) {
+  const sidebarW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w'));
+  const cx = mx - sidebarW, cy = my;
+  for (let i = colRects.length - 1; i >= 0; i--) {
+    const r = colRects[i];
+    if (cx >= r.rx && cx < r.rx + r.rw && cy >= r.ry && cy < r.ry + r.rh) return r;
+  }
+  return null;
+}
+
+// ── Sidebar stats ────────────────────────────────────────────────────────
+
+function computeStats() {
+  const totalJobs = data.reduce((s, d) => s + (d.jobs || 0), 0);
+
+  let weightedSum = 0, weightedCount = 0;
+  for (const d of data) {
+    if (d.exposure != null && d.jobs) {
+      weightedSum += d.exposure * d.jobs;
+      weightedCount += d.jobs;
+    }
+  }
+  const weightedAvg = weightedCount > 0 ? weightedSum / weightedCount : 0;
+
+  const histogram = new Array(11).fill(0);
+  for (const d of data) {
+    if (d.exposure != null && d.jobs) histogram[d.exposure] += d.jobs;
+  }
+
+  const tierNamesLocal = I18N.tierNames[lang] || I18N.tierNames.de;
+  const tiers = [
+    { name: tierNamesLocal[0], range: [0, 1], color: exposureColorCSS(0.5, 1) },
+    { name: tierNamesLocal[1], range: [2, 3], color: exposureColorCSS(2.5, 1) },
+    { name: tierNamesLocal[2], range: [4, 5], color: exposureColorCSS(4.5, 1) },
+    { name: tierNamesLocal[3], range: [6, 7], color: exposureColorCSS(6.5, 1) },
+    { name: tierNamesLocal[4], range: [8, 10], color: exposureColorCSS(9, 1) },
+  ];
+  for (const tier of tiers) {
+    tier.jobs = 0;
+    for (const d of data) {
+      if (d.exposure != null && d.jobs && d.exposure >= tier.range[0] && d.exposure <= tier.range[1])
+        tier.jobs += d.jobs;
+    }
+    tier.pct = totalJobs > 0 ? tier.jobs / totalJobs * 100 : 0;
+  }
+
+  let wagesExposed = 0;
+  for (const d of data) {
+    if (d.exposure != null && d.exposure >= 7 && d.jobs && d.pay) {
+      wagesExposed += d.jobs * d.pay;
+    }
+  }
+
+  document.getElementById("statTotalJobs").textContent = (totalJobs / 1e6).toFixed(1) + "M";
+  document.getElementById("statAvgExposure").innerHTML =
+    `<span style="color:${exposureColorCSS(weightedAvg, 1)}">${weightedAvg.toFixed(1)}</span>`;
+
+  const maxHist = Math.max(...histogram);
+  document.getElementById("histogram").innerHTML = histogram.map((count, i) => {
+    const h = maxHist > 0 ? count / maxHist * 100 : 0;
+    return `<div class="bar" style="height:${Math.max(2, h)}%;background:${exposureColorCSS(i, 0.7)}" title="Score ${i}: ${formatNumber(count)}"></div>`;
+  }).join("");
+
+  document.getElementById("tierBar").innerHTML = tiers.map(t =>
+    `<div class="tier-row">
+      <div class="tier-color" style="background:${t.color}"></div>
+      <span class="tier-name">${t.name} (${t.range[0]}–${t.range[1]})</span>
+      <span class="tier-jobs">${formatNumber(t.jobs)}</span>
+      <span class="tier-pct">${t.pct.toFixed(0)}%</span>
+    </div>`
+  ).join("");
+
+  // Pay bands (EUR)
+  const payBands = [
+    { label: "<€30K",    min: 0,      max: 30000  },
+    { label: "€30–45K",  min: 30000,  max: 45000  },
+    { label: "€45–60K",  min: 45000,  max: 60000  },
+    { label: "€60–80K",  min: 60000,  max: 80000  },
+    { label: "€80K+",    min: 80000,  max: Infinity },
+  ];
+  document.getElementById("payChart").innerHTML = payBands.map(band => {
+    let wSum = 0, wCount = 0;
+    for (const d of data) {
+      if (d.exposure != null && d.jobs && d.pay != null && d.pay >= band.min && d.pay < band.max) {
+        wSum += d.exposure * d.jobs;
+        wCount += d.jobs;
+      }
+    }
+    const avg = wCount > 0 ? wSum / wCount : 0;
+    return `<div class="hbar-row">
+      <span class="hbar-label">${band.label}</span>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${avg/10*100}%;background:${exposureColorCSS(avg, 0.8)}"></div></div>
+      <span class="hbar-val">${avg.toFixed(1)}</span>
+    </div>`;
+  }).join("");
+
+  // Education — German KldB levels
+  const eduGroups = lang === "de" ? [
+    { label: "Helfer",       match: [1] },
+    { label: "Fachkraft",    match: [2] },
+    { label: "Spezialist",   match: [3] },
+    { label: "Experte",      match: [4] },
+  ] : [
+    { label: "No qual.",     match: [1] },
+    { label: "Vocational",   match: [2] },
+    { label: "Specialist",   match: [3] },
+    { label: "University",   match: [4] },
+  ];
+  document.getElementById("eduChart").innerHTML = eduGroups.map(grp => {
+    let wSum = 0, wCount = 0;
+    for (const d of data) {
+      if (d.exposure != null && d.jobs && grp.match.includes(d.education_level)) {
+        wSum += d.exposure * d.jobs;
+        wCount += d.jobs;
+      }
+    }
+    const avg = wCount > 0 ? wSum / wCount : 0;
+    return `<div class="hbar-row">
+      <span class="hbar-label">${grp.label}</span>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${avg/10*100}%;background:${exposureColorCSS(avg, 0.8)}"></div></div>
+      <span class="hbar-val">${avg.toFixed(1)}</span>
+    </div>`;
+  }).join("");
+
+  // Wages at risk
+  const billions = wagesExposed / 1e9;
+  document.getElementById("statWages").textContent = "€" + billions.toFixed(0) + (lang === "de" ? " Mrd." : "B");
+}
+
+// ── EU Context chart ─────────────────────────────────────────────────────
+
+function buildEUChart() {
+  if (!euContext.countries_comparison) return;
+
+  const countries = euContext.countries_comparison;
+  const maxEmp = Math.max(...countries.map(c => c.employment));
+
+  document.getElementById("euChart").innerHTML = countries.map(c => {
+    const name = lang === "de" ? c.name_de : c.name_en;
+    const empPct = (c.employment / maxEmp * 100);
+    const isDE = c.code === "DE";
+    const color = isDE ? "var(--accent)" : exposureColorCSS(c.ai_exposure_est, 0.6);
+    const empLabel = (c.employment / 1e6).toFixed(1) + "M";
+    return `<div class="eu-bar-row">
+      <span class="eu-bar-label" style="${isDE ? 'font-weight:700;color:var(--fg)' : ''}">${c.code}</span>
+      <div class="eu-bar-track"><div class="eu-bar-fill" style="width:${empPct}%;background:${color}"></div></div>
+      <span class="eu-bar-val">${empLabel}</span>
+    </div>`;
+  }).join("");
+
+  const shareEl = document.getElementById("euSharePct");
+  if (shareEl) shareEl.textContent = (euContext.de_share_of_eu * 100).toFixed(1) + "%";
+}
+
+// ── Events ───────────────────────────────────────────────────────────────
+
+canvas.addEventListener("mousemove", (e) => {
+  const hit = currentView === "treemap" ? hitTest(e.clientX, e.clientY) : hitTestColumns(e.clientX, e.clientY);
+  if (hit !== hovered) {
+    hovered = hit;
+    currentView === "treemap" ? draw() : drawColumns();
+  }
+  if (hovered) {
+    showTooltip(hovered, e.clientX, e.clientY);
+    canvas.style.cursor = "pointer";
+  } else {
+    hideTooltip();
+    canvas.style.cursor = "default";
+  }
+});
+
+canvas.addEventListener("click", (e) => {
+  const hit = currentView === "treemap" ? hitTest(e.clientX, e.clientY) : hitTestColumns(e.clientX, e.clientY);
+  if (hit && hit.url) window.open(hit.url, "_blank");
+});
+
+canvas.addEventListener("mouseleave", () => {
+  hovered = null;
+  hideTooltip();
+  currentView === "treemap" ? draw() : drawColumns();
+});
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  if (currentView === "treemap") { layout(); draw(); }
+  else { layoutColumns(); drawColumns(); }
+}
+
+// ── Gradient legends ─────────────────────────────────────────────────────
+
+function drawGradientLegend() {
+  const c = document.getElementById("gradientLegend");
+  const gctx = c.getContext("2d");
+  for (let x = 0; x < 80; x++) {
+    gctx.fillStyle = exposureColorCSS(x / 79 * 10, 1);
+    gctx.fillRect(x, 0, 1, 8);
+  }
+}
+
+function drawOutlookLegend() {
+  const c = document.getElementById("outlookLegend");
+  if (!c) return;
+  const gctx = c.getContext("2d");
+  for (let x = 0; x < 80; x++) {
+    const outlook = -8 + (x / 79) * 20;
+    gctx.fillStyle = outlookColorCSS(outlook, 1);
+    gctx.fillRect(x, 0, 1, 8);
+  }
+}
+
+// ── Load ─────────────────────────────────────────────────────────────────
+
+// ── Embedded data (works without server) ──
+const EMBEDDED_DATA = [{"title_de":"Hochbaufacharbeiter/in","title_en":"Construction Worker (Building)","slug":"hochbaufacharbeiter-in","kldb_code":"32102","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":37539,"jobs":421311,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Construction work is entirely physical, outdoors, and requires real-time human presence. AI has essentially no impact on daily work.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=32102"},{"title_de":"Tiefbaufacharbeiter/in","title_en":"Civil Construction Worker","slug":"tiefbaufacharbeiter-in","kldb_code":"32212","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":37302,"jobs":311438,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Underground and road construction is heavy physical labor in outdoor environments. AI cannot replace manual earthwork and infrastructure building.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=32212"},{"title_de":"Klempner/in (SHK)","title_en":"Plumber (HVAC)","slug":"klempner-in-shk","kldb_code":"34212","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":35524,"jobs":305871,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Plumbing is hands-on physical work in buildings. AI has no meaningful impact on pipe fitting and installation.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=34212"},{"title_de":"Sanitär- und Heizungstechniker/in","title_en":"Plumbing and Heating Technician","slug":"sanitaer-und-heizungstechniker-in","kldb_code":"34302","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":37784,"jobs":286070,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Sanitary and heating installation is skilled manual work requiring physical presence in buildings.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=34302"},{"title_de":"Elektroniker/in für Energie- und Gebäudetechnik","title_en":"Electrical Installer (Buildings)","slug":"elektroniker-in-fuer-energie-und-gebaeudetechnik","kldb_code":"34502","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":39088,"jobs":220607,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Electrical installation in buildings is hands-on skilled work. AI aids planning but wiring is manual.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=34502"},{"title_de":"Maler/in und Lackierer/in","title_en":"Painter and Varnisher","slug":"maler-in-und-lackierer-in","kldb_code":"32302","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":30656,"jobs":191874,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Painting and varnishing is entirely physical work requiring manual dexterity and on-site presence.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=32302"},{"title_de":"Architekt/in","title_en":"Architect","slug":"architekt-in","kldb_code":"31104","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":53712,"jobs":140995,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Architecture is increasingly digital — BIM, CAD, rendering, documentation. AI tools are rapidly advancing in generative design and plan creation.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=31104"},{"title_de":"Gebäudetechniker/in","title_en":"Building Technology Engineer","slug":"gebaeudetechniker-in","kldb_code":"34102","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":48981,"jobs":121594,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":4,"exposure_rationale":"Building tech combines physical installation with digital planning and monitoring. AI assists with smart building management.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=34102"},{"title_de":"Dachdecker/in","title_en":"Roofer","slug":"dachdecker-in","kldb_code":"33202","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":35474,"jobs":64473,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Roofing is physically demanding outdoor work at heights. AI has virtually zero impact on this occupation.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=33202"},{"title_de":"Vermessungsingenieur/in","title_en":"Surveying Engineer","slug":"vermessungsingenieur-in","kldb_code":"33104","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":53504,"jobs":34558,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Surveying increasingly uses digital tools and GIS. AI can assist with data processing but fieldwork requires physical presence.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=33104"},{"title_de":"Stadtplaner/in","title_en":"Urban Planner","slug":"stadtplaner-in","kldb_code":"31214","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":57248,"jobs":27512,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Urban planning involves significant analytical, documentation, and modeling work — domains where AI capabilities are growing.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=31214"},{"title_de":"Schornsteinfeger/in","title_en":"Chimney Sweep","slug":"schornsteinfeger-in","kldb_code":"34402","category_de":"Bau, Architektur, Vermessung und Gebäudetechnik","category_en":"Construction, Architecture, Surveying and Building Technology","pay":36342,"jobs":22231,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Chimney sweeping is physical work at heights. AI has zero impact.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=34402"},{"title_de":"Gesundheits- und Krankenpfleger/in","title_en":"Nurse","slug":"gesundheits-und-krankenpfleger-in","kldb_code":"81302","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":39010,"jobs":801717,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Nursing is physical, hands-on patient care requiring empathy and real-time clinical judgment. AI assists with monitoring but not bedside care.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81302"},{"title_de":"Erzieher/in","title_en":"Childcare Educator","slug":"erzieher-in","kldb_code":"82104","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":35724,"jobs":668242,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":2,"exposure_rationale":"Childcare requires constant physical presence, emotional engagement, and real-time interaction with children. AI has minimal applicability.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=82104"},{"title_de":"Altenpfleger/in","title_en":"Elderly Care Nurse","slug":"altenpfleger-in","kldb_code":"82302","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":33450,"jobs":643391,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Elderly care requires physical presence, emotional support, and hands-on assistance with daily activities.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=82302"},{"title_de":"Medizinische/r Fachangestellte/r","title_en":"Medical Assistant","slug":"medizinische-r-fachangestellte-r","kldb_code":"81402","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":29296,"jobs":633854,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":4,"exposure_rationale":"Medical assistants handle both patient-facing tasks (physical) and documentation (increasingly digital). AI assists with records management.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81402"},{"title_de":"Lehrer/in (Sekundarstufe)","title_en":"Secondary School Teacher","slug":"lehrer-in-sekundarstufe","kldb_code":"84104","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":55216,"jobs":527173,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Teaching combines knowledge delivery (increasingly AI-augmented) with classroom management, mentoring, and interpersonal guidance.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=84104"},{"title_de":"Sozialarbeiter/in","title_en":"Social Worker","slug":"sozialarbeiter-in","kldb_code":"82202","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":40745,"jobs":306498,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Social work requires deep interpersonal skills, home visits, and crisis intervention — all requiring human presence and empathy.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=82202"},{"title_de":"Grundschullehrer/in","title_en":"Primary School Teacher","slug":"grundschullehrer-in","kldb_code":"84404","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":50210,"jobs":233422,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Primary teaching requires high interpersonal engagement with young children. AI may supplement lessons but cannot replace the teacher.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=84404"},{"title_de":"Physiotherapeut/in","title_en":"Physiotherapist","slug":"physiotherapeut-in","kldb_code":"81502","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":37782,"jobs":176573,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":2,"exposure_rationale":"Physiotherapy is hands-on physical treatment. AI may assist with diagnosis but therapeutic touch cannot be automated.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81502"},{"title_de":"Sozialpädagoge/Sozialpädagogin","title_en":"Social Pedagogue","slug":"sozialpaedagoge-sozialpaedagogin","kldb_code":"82602","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":40205,"jobs":174562,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Social pedagogy requires personal interaction, mentoring, and community work. AI has limited applicability.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=82602"},{"title_de":"Arzt/Ärztin (Allgemeinmedizin)","title_en":"General Practitioner","slug":"arzt-aerztin-allgemeinmedizin","kldb_code":"81102","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":81339,"jobs":162501,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Medicine requires physical examination, patient interaction, and clinical judgment. AI assists with diagnostics but cannot replace the physician-patient relationship.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81102"},{"title_de":"Berufsschullehrer/in","title_en":"Vocational School Teacher","slug":"berufsschullehrer-in","kldb_code":"84204","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":49770,"jobs":95747,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Vocational teaching combines practical skill instruction (physical) with theoretical content delivery (increasingly AI-augmented).","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=84204"},{"title_de":"Heilerziehungspfleger/in","title_en":"Therapeutic Care Worker","slug":"heilerziehungspfleger-in","kldb_code":"82502","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":35326,"jobs":93554,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Therapeutic care is hands-on work with people with disabilities requiring empathy and physical assistance.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=82502"},{"title_de":"Arzt/Ärztin (Innere Medizin)","title_en":"Internist","slug":"arzt-aerztin-innere-medizin","kldb_code":"81104","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":92191,"jobs":86102,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Internal medicine combines patient examination with diagnostic reasoning. AI assists with imaging and lab analysis.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81104"},{"title_de":"Psychologe/Psychologin","title_en":"Psychologist","slug":"psychologe-psychologin","kldb_code":"81904","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":50597,"jobs":83574,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Psychology requires deep interpersonal interaction and empathy. AI may assist with assessments but therapy is inherently human.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81904"},{"title_de":"Zahnarzt/Zahnärztin","title_en":"Dentist","slug":"zahnarzt-zahnaerztin","kldb_code":"81602","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":74536,"jobs":72075,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Dentistry is physical, precision work in patients' mouths. AI assists with imaging analysis but treatment is manual.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81602"},{"title_de":"Heilpädagoge/Heilpädagogin","title_en":"Special Needs Educator","slug":"heilpaedagoge-heilpaedagogin","kldb_code":"82402","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":38916,"jobs":66581,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":2,"exposure_rationale":"Special needs education requires individual attention, empathy, and adaptive physical interaction.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=82402"},{"title_de":"Ergotherapeut/in","title_en":"Occupational Therapist","slug":"ergotherapeut-in","kldb_code":"81802","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":36641,"jobs":56407,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":2,"exposure_rationale":"Occupational therapy is physical, hands-on rehabilitation work. AI has minimal impact.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81802"},{"title_de":"Arzt/Ärztin (Chirurgie)","title_en":"Surgeon","slug":"arzt-aerztin-chirurgie","kldb_code":"81204","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":124315,"jobs":53584,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Surgery is precise physical work requiring years of training and real-time judgment. AI assists with imaging but the surgeon's hands are irreplaceable.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81204"},{"title_de":"Apotheker/in","title_en":"Pharmacist","slug":"apotheker-in","kldb_code":"81704","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":54865,"jobs":52155,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Pharmacy combines physical dispensing with digital drug interaction checking and counseling. AI automates verification tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81704"},{"title_de":"Hochschulprofessor/in","title_en":"University Professor","slug":"hochschulprofessor-in","kldb_code":"84304","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":69272,"jobs":47208,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Professors do significant knowledge work — research, writing, grading. AI impacts the digital components but classroom teaching and mentoring remain human.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=84304"},{"title_de":"Tiermedizinische/r Fachangestellte/r","title_en":"Veterinary Assistant","slug":"tiermedizinische-r-fachangestellte-r","kldb_code":"81602","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":28934,"jobs":42512,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Veterinary assistance combines animal handling (physical) with records management (digital). AI helps with the digital side.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81602"},{"title_de":"Logopäde/Logopädin","title_en":"Speech Therapist","slug":"logopaede-logopaedin","kldb_code":"81902","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":39325,"jobs":31360,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Speech therapy requires in-person interaction and individualized treatment. AI may assist with exercises.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=81902"},{"title_de":"Tierarzt/Tierärztin","title_en":"Veterinarian","slug":"tierarzt-tieraerztin","kldb_code":"83102","category_de":"Gesundheit, Soziales, Lehre und Erziehung","category_en":"Health, Social Work, Teaching and Education","pay":48691,"jobs":28283,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Veterinary medicine requires physical examination and treatment of animals. AI helps with diagnostics but treatment is hands-on.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=83102"},{"title_de":"Einzelhandelskaufmann/-frau","title_en":"Retail Salesperson","slug":"einzelhandelskaufmann-frau","kldb_code":"62102","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":28691,"jobs":1439701,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":4,"exposure_rationale":"Retail combines customer interaction with inventory and POS tasks. AI-powered self-checkout and recommendation engines are growing but face-to-face service persists.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=62102"},{"title_de":"Reinigungskraft","title_en":"Cleaner","slug":"reinigungskraft","kldb_code":"63802","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":23807,"jobs":1105522,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Helfer (keine formale Ausbildung)","education_en":"No formal qualification (Helfer)","education_level":1,"exposure":1,"exposure_rationale":"Cleaning is entirely physical work in various environments. Robots exist but human cleaners handle complexity.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63802"},{"title_de":"Kellner/in","title_en":"Waiter / Waitress","slug":"kellner-in","kldb_code":"63502","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":24888,"jobs":846074,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Helfer (keine formale Ausbildung)","education_en":"No formal qualification (Helfer)","education_level":1,"exposure":2,"exposure_rationale":"Waiting tables requires physical presence, social interaction, and multitasking in a dynamic environment.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63502"},{"title_de":"Koch/Köchin","title_en":"Cook / Chef","slug":"koch-koechin","kldb_code":"63102","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":30438,"jobs":621083,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Cooking is physical, creative, and requires taste and real-time adaptation. AI may help with recipes but cannot replace kitchen work.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63102"},{"title_de":"Handelsvertreter/in","title_en":"Sales Representative","slug":"handelsvertreter-in","kldb_code":"61302","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":43252,"jobs":378513,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":5,"exposure_rationale":"Sales combines relationship building with data analysis and reporting. AI helps with lead scoring and CRM but personal relationships matter.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=61302"},{"title_de":"Hotelfachmann/-frau","title_en":"Hotel Specialist","slug":"hotelfachmann-frau","kldb_code":"63202","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":31413,"jobs":347359,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Hotel work combines physical service tasks with some digital booking and communication, where AI chatbots are gaining ground.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63202"},{"title_de":"Großhandelskaufmann/-frau","title_en":"Wholesale and Foreign Trade Clerk","slug":"grosshandelskaufmann-frau","kldb_code":"62202","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":39897,"jobs":290746,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Wholesale trade involves pricing, inventory management, and procurement documentation — tasks increasingly supported by AI.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=62202"},{"title_de":"Friseur/in","title_en":"Hairdresser","slug":"friseur-in","kldb_code":"62502","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":24137,"jobs":237073,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Hairdressing requires hands-on physical work with clients. AI cannot cut or style hair.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=62502"},{"title_de":"Bäcker/in","title_en":"Baker","slug":"baecker-in","kldb_code":"63602","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":30326,"jobs":149310,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Baking is physical hands-on work with ingredients and ovens. AI has minimal impact on the craft.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63602"},{"title_de":"Einkaufsmanager/in","title_en":"Purchasing Manager","slug":"einkaufsmanager-in","kldb_code":"61104","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":61825,"jobs":96258,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Purchasing management involves analysis, negotiation, and process optimization — areas where AI can significantly assist.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=61104"},{"title_de":"Metzger/in (Fleischer/in)","title_en":"Butcher","slug":"metzger-in-fleischer-in","kldb_code":"63702","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":30167,"jobs":86113,"outlook":-8,"outlook_desc_de":"Starker Überhang","outlook_desc_en":"Strong Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Butchery is physical manual work with sharp tools. AI has no meaningful impact.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63702"},{"title_de":"Immobilienkaufmann/-frau","title_en":"Real Estate Agent","slug":"immobilienkaufmann-frau","kldb_code":"62302","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":42763,"jobs":85188,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":5,"exposure_rationale":"Real estate combines property viewings (physical) with market analysis and documentation (digital). AI assists with the digital components.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=62302"},{"title_de":"Tourismuskaufmann/-frau","title_en":"Tourism Specialist","slug":"tourismuskaufmann-frau","kldb_code":"63302","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":31254,"jobs":78659,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Tourism services involve significant booking, planning, and documentation work increasingly handled by AI booking engines.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63302"},{"title_de":"Kaufmann/-frau im E-Commerce","title_en":"E-Commerce Specialist","slug":"kaufmann-frau-im-e-commerce","kldb_code":"62602","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":37108,"jobs":66689,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":7,"exposure_rationale":"E-commerce is digital — product listings, SEO, analytics, customer communication. AI tools are transforming online retail operations.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=62602"},{"title_de":"Veranstaltungskaufmann/-frau","title_en":"Event Manager","slug":"veranstaltungskaufmann-frau","kldb_code":"63402","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":37353,"jobs":54220,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":5,"exposure_rationale":"Event management combines logistics (physical setup) with planning and communication (digital). AI assists with scheduling and coordination.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=63402"},{"title_de":"Außenhandelsmanager/in","title_en":"Foreign Trade Manager","slug":"aussenhandelsmanager-in","kldb_code":"61204","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":60003,"jobs":41191,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"International trade management involves document processing, compliance, and market analysis — domains where AI is increasingly effective.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=61204"},{"title_de":"Florist/in","title_en":"Florist","slug":"florist-in","kldb_code":"62402","category_de":"Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus","category_en":"Commercial Services, Trade, Sales, Hotel and Tourism","pay":25880,"jobs":35953,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Floristry is physical, creative handwork. AI has minimal impact on arranging flowers.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=62402"},{"title_de":"Landwirt/in","title_en":"Farmer","slug":"landwirt-in","kldb_code":"11102","category_de":"Land-, Forst- und Tierwirtschaft und Gartenbau","category_en":"Agriculture, Forestry, Animal Husbandry and Horticulture","pay":32446,"jobs":242876,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Farming requires physical presence and hands-on work with crops and livestock. AI can assist with precision agriculture but cannot replace the core manual and environmental tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=11102"},{"title_de":"Gärtner/in","title_en":"Gardener / Horticulturist","slug":"gaertner-in","kldb_code":"12102","category_de":"Land-, Forst- und Tierwirtschaft und Gartenbau","category_en":"Agriculture, Forestry, Animal Husbandry and Horticulture","pay":31176,"jobs":180416,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Gardening involves physical labor in variable outdoor conditions. AI may assist with planning but core work remains manual.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=12102"},{"title_de":"Tierpfleger/in","title_en":"Animal Keeper","slug":"tierpfleger-in","kldb_code":"11712","category_de":"Land-, Forst- und Tierwirtschaft und Gartenbau","category_en":"Agriculture, Forestry, Animal Husbandry and Horticulture","pay":27371,"jobs":44253,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Animal care is inherently physical and requires real-time presence. AI has minimal impact on daily hands-on care routines.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=11712"},{"title_de":"Forstwirt/in","title_en":"Forestry Worker","slug":"forstwirt-in","kldb_code":"11402","category_de":"Land-, Forst- und Tierwirtschaft und Gartenbau","category_en":"Agriculture, Forestry, Animal Husbandry and Horticulture","pay":34804,"jobs":38402,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Forestry work is conducted outdoors in unpredictable environments with physical tools. AI exposure is minimal.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=11402"},{"title_de":"Agrarwissenschaftler/in","title_en":"Agricultural Scientist","slug":"agrarwissenschaftler-in","kldb_code":"11804","category_de":"Land-, Forst- und Tierwirtschaft und Gartenbau","category_en":"Agriculture, Forestry, Animal Husbandry and Horticulture","pay":54571,"jobs":14577,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Agricultural scientists do significant knowledge work including data analysis, research, and reporting — all areas where AI is increasingly capable.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=11804"},{"title_de":"Soldat/in","title_en":"Soldier","slug":"soldat-in","kldb_code":"53212","category_de":"Militär","category_en":"Military","pay":33634,"jobs":181376,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Military service involves physical fitness, fieldwork, and operational readiness. AI assists with reconnaissance but core duties are physical.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=53212"},{"title_de":"Softwareentwickler/in","title_en":"Software Developer","slug":"softwareentwickler-in","kldb_code":"43104","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":63486,"jobs":533623,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":9,"exposure_rationale":"Software development is almost entirely digital work — writing code, debugging, designing systems. AI coding assistants are already transforming this field.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43104"},{"title_de":"Fachinformatiker/in Anwendungsentwicklung","title_en":"IT Application Developer","slug":"fachinformatiker-in-anwendungsentwicklung","kldb_code":"43702","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":47932,"jobs":304676,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":8,"exposure_rationale":"Application development is digital coding work. AI code generation tools significantly impact productivity and may reduce headcount needs.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43702"},{"title_de":"Fachinformatiker/in Systemintegration","title_en":"IT Systems Integrator","slug":"fachinformatiker-in-systemintegration","kldb_code":"43802","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":44555,"jobs":204439,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":5,"exposure_rationale":"Systems integration combines physical hardware setup with scripting and configuration. AI helps with automation but hardware work persists.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43802"},{"title_de":"IT-Systemadministrator/in","title_en":"IT Systems Administrator","slug":"it-systemadministrator-in","kldb_code":"43304","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":50290,"jobs":187543,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":5,"exposure_rationale":"IT administration combines hands-on hardware work with scriptable automation tasks. AI is accelerating the automation side.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43304"},{"title_de":"IT-Projektmanager/in","title_en":"IT Project Manager","slug":"it-projektmanager-in","kldb_code":"43114","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":70050,"jobs":140930,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"IT project management is predominantly digital — planning, documentation, communication. AI tools are reshaping project tracking and reporting.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43114"},{"title_de":"Web-Entwickler/in","title_en":"Web Developer","slug":"web-entwickler-in","kldb_code":"43504","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":53411,"jobs":123188,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":9,"exposure_rationale":"Web development is purely digital — HTML, CSS, JavaScript, design implementation. AI code generation tools are already highly capable in this domain.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43504"},{"title_de":"IT-Sicherheitsspezialist/in","title_en":"IT Security Specialist","slug":"it-sicherheitsspezialist-in","kldb_code":"43204","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":68709,"jobs":93677,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Cybersecurity combines analytical skills with hands-on incident response. AI enhances threat detection but human judgment remains critical.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43204"},{"title_de":"DevOps-Ingenieur/in","title_en":"DevOps Engineer","slug":"devops-ingenieur-in","kldb_code":"43154","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":71389,"jobs":87530,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"DevOps is digital infrastructure work — CI/CD, automation, monitoring. AI is increasingly capable of writing deployment scripts and configurations.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43154"},{"title_de":"Datenwissenschaftler/in","title_en":"Data Scientist","slug":"datenwissenschaftler-in","kldb_code":"43414","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":69006,"jobs":85556,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":8,"exposure_rationale":"Data science is fully digital — analysis, modeling, visualization. AI can increasingly automate exploratory analysis and model building.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43414"},{"title_de":"KI-Ingenieur/in","title_en":"AI/ML Engineer","slug":"ki-ingenieur-in","kldb_code":"43904","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":71679,"jobs":55277,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"AI engineering is digital knowledge work. Paradoxically, AI tools are increasingly capable of assisting with their own development.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43904"},{"title_de":"Datenbankadministrator/in","title_en":"Database Administrator","slug":"datenbankadministrator-in","kldb_code":"43614","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":56870,"jobs":47700,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":7,"exposure_rationale":"Database administration is digital work — queries, optimization, monitoring. AI is automating many routine DBA tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=43614"},{"title_de":"Biologe/Biologin","title_en":"Biologist","slug":"biologe-biologin","kldb_code":"41104","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":48318,"jobs":47653,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Biology combines lab work (physical) with data analysis and publication (digital). AI assists with the knowledge work components.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=41104"},{"title_de":"Chemiker/in","title_en":"Chemist","slug":"chemiker-in","kldb_code":"41214","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":60839,"jobs":42352,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Chemistry research involves physical lab work alongside significant data analysis and reporting where AI can contribute.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=41214"},{"title_de":"Physiker/in","title_en":"Physicist","slug":"physiker-in","kldb_code":"41314","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":62353,"jobs":28310,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Physics research involves significant computational modeling and analysis. AI is increasingly useful for simulation and data interpretation.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=41314"},{"title_de":"Mathematiker/in","title_en":"Mathematician","slug":"mathematiker-in","kldb_code":"41504","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":64333,"jobs":21756,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":8,"exposure_rationale":"Mathematics is pure knowledge work involving proofs, modeling, and computation. AI systems are increasingly strong at mathematical reasoning.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=41504"},{"title_de":"Geologe/Geologin","title_en":"Geologist","slug":"geologe-geologin","kldb_code":"42104","category_de":"Naturwissenschaft, Geografie und Informatik","category_en":"Natural Sciences, Geography and IT","pay":56885,"jobs":12198,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Geology combines fieldwork with data analysis and GIS mapping. AI helps with the analytical side but fieldwork stays manual.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=42104"},{"title_de":"Maschinen- und Anlagenführer/in","title_en":"Machine Operator","slug":"maschinen-und-anlagenfuehrer-in","kldb_code":"25402","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":34321,"jobs":382721,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Machine operation is physical work on factory floors. AI optimizes settings but operators must be present.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=25402"},{"title_de":"Elektrotechniker/in","title_en":"Electrical Technician","slug":"elektrotechniker-in","kldb_code":"25302","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":39000,"jobs":348634,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Electrical installation is hands-on physical work. AI helps with planning but wiring and troubleshooting are manual.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=25302"},{"title_de":"Industriemechaniker/in","title_en":"Industrial Mechanic","slug":"industriemechaniker-in","kldb_code":"24212","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":36938,"jobs":281499,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Industrial mechanics work physically with machinery in factory environments. AI may optimize maintenance schedules but cannot replace manual repair.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=24212"},{"title_de":"Metallbauer/in","title_en":"Metal Worker","slug":"metallbauer-in","kldb_code":"24112","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":34988,"jobs":210067,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Metal fabrication is a physical trade requiring manual skill with tools and materials. AI assists CNC programming but not hands-on metalwork.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=24112"},{"title_de":"Industrieelektriker/in","title_en":"Industrial Electrician","slug":"industrieelektriker-in","kldb_code":"25502","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":36379,"jobs":191644,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":2,"exposure_rationale":"Industrial electrical work is hands-on in factory environments. AI has minimal impact on physical wiring.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=25502"},{"title_de":"Maschinenbauingenieur/in","title_en":"Mechanical Engineer","slug":"maschinenbauingenieur-in","kldb_code":"25102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":59065,"jobs":191477,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Mechanical engineering involves significant CAD work, simulation, and documentation — domains where AI is advancing rapidly.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=25102"},{"title_de":"Mechatroniker/in","title_en":"Mechatronics Technician","slug":"mechatroniker-in","kldb_code":"26112","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":40599,"jobs":185498,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Mechatronics combines physical repair and installation with some digital diagnostics. AI can assist with troubleshooting but core work is hands-on.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=26112"},{"title_de":"Elektroingenieur/in","title_en":"Electrical Engineer","slug":"elektroingenieur-in","kldb_code":"25212","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":62353,"jobs":170766,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Electrical engineering involves significant digital design, simulation, and documentation work that AI is increasingly capable of supporting.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=25212"},{"title_de":"Werkzeugmechaniker/in","title_en":"Toolmaker","slug":"werkzeugmechaniker-in","kldb_code":"24302","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":39516,"jobs":69980,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Toolmaking is precision manual work with CNC and manual machines. AI assists with CNC programming but core skills are physical.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=24302"},{"title_de":"Lebensmitteltechniker/in","title_en":"Food Technologist","slug":"lebensmitteltechniker-in","kldb_code":"22102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":43299,"jobs":65987,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":4,"exposure_rationale":"Food technology combines lab work with process optimization. AI can help with quality control analytics and recipe optimization.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=22102"},{"title_de":"Technische/r Produktdesigner/in","title_en":"Technical Product Designer","slug":"technische-r-produktdesigner-in","kldb_code":"27102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":41223,"jobs":55653,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":7,"exposure_rationale":"Product design is increasingly digital — CAD, rendering, documentation. AI tools are already augmenting design workflows significantly.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=27102"},{"title_de":"Chemielaborant/in","title_en":"Chemical Lab Technician","slug":"chemielaborant-in","kldb_code":"21102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":40355,"jobs":52323,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":4,"exposure_rationale":"Lab work combines physical experimentation with data analysis. AI can assist with analytical tasks but physical lab work remains manual.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=21102"},{"title_de":"Verfahrenstechniker/in","title_en":"Process Engineer","slug":"verfahrenstechniker-in","kldb_code":"20102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":59781,"jobs":42578,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Process engineering mixes physical plant operations with significant analytical and optimization work where AI can contribute.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=20102"},{"title_de":"Textiltechniker/in","title_en":"Textile Technician","slug":"textiltechniker-in","kldb_code":"28102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":32473,"jobs":31339,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Textile work involves physical machine operation and material handling. AI has limited impact on core production tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=28102"},{"title_de":"Getränketechnologe/in","title_en":"Beverage Technologist","slug":"getraenketechnologe-in","kldb_code":"29102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":37645,"jobs":17824,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Beverage production requires physical process management. AI can optimize formulas and quality control.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=29102"},{"title_de":"Papiertechniker/in","title_en":"Paper Technologist","slug":"papiertechniker-in","kldb_code":"23102","category_de":"Rohstoffgewinnung, Produktion und Fertigung","category_en":"Raw Materials Extraction, Production and Manufacturing","pay":38137,"jobs":12340,"outlook":-8,"outlook_desc_de":"Starker Überhang","outlook_desc_en":"Strong Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Paper manufacturing involves machine operation in industrial settings. AI has limited impact on core production.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=23102"},{"title_de":"Grafikdesigner/in","title_en":"Graphic Designer","slug":"grafikdesigner-in","kldb_code":"92104","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":40800,"jobs":83125,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":9,"exposure_rationale":"Graphic design is entirely digital — layouts, illustrations, branding. AI image generation is already transforming this field dramatically.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=92104"},{"title_de":"Journalist/in","title_en":"Journalist","slug":"journalist-in","kldb_code":"91104","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":50090,"jobs":72306,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":8,"exposure_rationale":"Journalism is predominantly digital knowledge work — researching, writing, editing. AI can generate articles and summarize sources at scale.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=91104"},{"title_de":"Webdesigner/in","title_en":"Web Designer","slug":"webdesigner-in","kldb_code":"92404","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":47533,"jobs":64374,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":9,"exposure_rationale":"Web design is entirely digital. AI tools can now generate complete website designs, layouts, and CSS — high exposure.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=92404"},{"title_de":"Musiker/in","title_en":"Musician","slug":"musiker-in","kldb_code":"93102","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":36076,"jobs":53979,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Music performance requires physical presence and artistic expression. AI generates music but live performance remains human.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=93102"},{"title_de":"Redakteur/in","title_en":"Editor","slug":"redakteur-in","kldb_code":"94304","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":43187,"jobs":47802,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":8,"exposure_rationale":"Editing is digital knowledge work — reviewing, correcting, restructuring text. AI is increasingly capable of these tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=94304"},{"title_de":"Autor/in / Schriftsteller/in","title_en":"Author / Writer","slug":"autor-in-schriftsteller-in","kldb_code":"94102","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":39374,"jobs":41367,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":8,"exposure_rationale":"Writing is pure knowledge work. AI language models can generate text at scale, significantly impacting content creation.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=94102"},{"title_de":"Fotograf/in","title_en":"Photographer","slug":"fotograf-in","kldb_code":"92302","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":32733,"jobs":38395,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Photography combines physical presence (shooting) with extensive digital post-processing where AI is increasingly capable.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=92302"},{"title_de":"Übersetzer/in / Dolmetscher/in","title_en":"Translator / Interpreter","slug":"uebersetzer-in-dolmetscher-in","kldb_code":"92202","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":41886,"jobs":35597,"outlook":-8,"outlook_desc_de":"Starker Überhang","outlook_desc_en":"Strong Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":9,"exposure_rationale":"Translation is pure language work. Machine translation with AI has already disrupted this field. Interpreting retains more human need but is also exposed.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=92202"},{"title_de":"Geisteswissenschaftler/in","title_en":"Humanities Scholar","slug":"geisteswissenschaftler-in","kldb_code":"91202","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":43825,"jobs":34782,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Humanities scholarship is knowledge-intensive — research, writing, analysis. AI significantly impacts text-based scholarship.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=91202"},{"title_de":"Bibliothekar/in","title_en":"Librarian","slug":"bibliothekar-in","kldb_code":"91302","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":39695,"jobs":27945,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Libraries combine physical service with information management. AI enhances search and cataloging but community service remains human.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=91302"},{"title_de":"Schauspieler/in","title_en":"Actor","slug":"schauspieler-in","kldb_code":"93202","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":31452,"jobs":24398,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":3,"exposure_rationale":"Acting requires physical and emotional performance. AI-generated media exists but live and film acting needs human performers.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=93202"},{"title_de":"Tänzer/in","title_en":"Dancer","slug":"taenzer-in","kldb_code":"93302","category_de":"Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung","category_en":"Humanities, Media, Arts, Culture and Design","pay":29312,"jobs":8038,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":2,"exposure_rationale":"Dance is pure physical performance art. AI has no impact on the physical act of dancing.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=93302"},{"title_de":"Bürokaufmann/-frau","title_en":"Office Administrator","slug":"buerokaufmann-frau","kldb_code":"71302","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":34370,"jobs":1811466,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":7,"exposure_rationale":"Office administration is largely digital — emails, scheduling, document management. AI tools are already automating many core tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71302"},{"title_de":"Verwaltungsfachangestellte/r","title_en":"Public Administration Clerk","slug":"verwaltungsfachangestellte-r","kldb_code":"71202","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":36823,"jobs":1196301,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Public administration involves extensive document processing, form management, and correspondence — all increasingly automatable.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71202"},{"title_de":"Sachbearbeiter/in (allgemein)","title_en":"General Clerk","slug":"sachbearbeiter-in-allgemein","kldb_code":"71702","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":33100,"jobs":928334,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":7,"exposure_rationale":"General clerical work is office-based — data entry, filing, correspondence. AI is automating most routine clerical tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71702"},{"title_de":"Buchhalter/in","title_en":"Bookkeeper / Accountant","slug":"buchhalter-in","kldb_code":"72202","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":39058,"jobs":681238,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":8,"exposure_rationale":"Bookkeeping is highly structured digital work — entering transactions, reconciling accounts, generating reports. AI and automation are rapidly displacing routine bookkeeping.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72202"},{"title_de":"Sekretär/in / Assistenz","title_en":"Secretary / Assistant","slug":"sekretaer-in-assistenz","kldb_code":"71602","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":33202,"jobs":589885,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":8,"exposure_rationale":"Administrative assistance is predominantly digital — scheduling, correspondence, document preparation. AI tools are rapidly automating these tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71602"},{"title_de":"Bankkaufmann/-frau","title_en":"Banking Clerk","slug":"bankkaufmann-frau","kldb_code":"72402","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":44649,"jobs":374951,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":7,"exposure_rationale":"Banking is predominantly digital — transactions, risk assessment, customer data management. AI is automating many routine banking tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72402"},{"title_de":"Verwaltungswirt/in","title_en":"Administrative Officer","slug":"verwaltungswirt-in","kldb_code":"73602","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":44413,"jobs":342813,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":6,"exposure_rationale":"Public administration involves document processing, regulation interpretation, and correspondence — increasingly AI-assisted.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=73602"},{"title_de":"Geschäftsführer/in","title_en":"Managing Director / CEO","slug":"geschaeftsfuehrer-in","kldb_code":"71104","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":97493,"jobs":285673,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Executive management combines strategic thinking, relationship building, and decision-making. AI assists with analytics but leadership is inherently human.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71104"},{"title_de":"Sachbearbeiter/in Versicherung","title_en":"Insurance Claims Processor","slug":"sachbearbeiter-in-versicherung","kldb_code":"72502","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":36010,"jobs":255290,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":8,"exposure_rationale":"Claims processing is structured digital work — reviewing documents, applying rules, calculating payments. AI is automating this rapidly.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72502"},{"title_de":"Versicherungskaufmann/-frau","title_en":"Insurance Agent","slug":"versicherungskaufmann-frau","kldb_code":"72302","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":41514,"jobs":198880,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Insurance involves risk assessment, policy documentation, and claims processing — areas where AI is making significant inroads.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72302"},{"title_de":"Steuerfachangestellte/r","title_en":"Tax Clerk","slug":"steuerfachangestellte-r","kldb_code":"72702","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":37371,"jobs":189209,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":8,"exposure_rationale":"Tax preparation is structured digital work — forms, calculations, filing. AI is automating routine tax tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72702"},{"title_de":"Personalmanager/in","title_en":"HR Manager","slug":"personalmanager-in","kldb_code":"73304","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":57004,"jobs":183049,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"HR management involves both interpersonal work (interviews, counseling) and administrative processing (increasingly automated by AI).","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=73304"},{"title_de":"Rechtsanwalt/Rechtsanwältin","title_en":"Lawyer","slug":"rechtsanwalt-rechtsanwaeltin","kldb_code":"73104","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":66630,"jobs":169400,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Legal work involves extensive document review, research, and drafting. AI is transforming legal research and contract analysis.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=73104"},{"title_de":"Unternehmensberater/in","title_en":"Management Consultant","slug":"unternehmensberater-in","kldb_code":"71404","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":71397,"jobs":148733,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Consulting is primarily knowledge work — analysis, presentations, strategy documents. AI is highly capable in these areas.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71404"},{"title_de":"Steuerberater/in","title_en":"Tax Advisor","slug":"steuerberater-in","kldb_code":"72104","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":74970,"jobs":127778,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Tax advising is predominantly knowledge work — analyzing regulations, computing tax optimizations, preparing documentation. AI is automating many routine tax computations.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72104"},{"title_de":"Rechtsanwaltsfachangestellte/r","title_en":"Legal Secretary","slug":"rechtsanwaltsfachangestellte-r","kldb_code":"73502","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":34583,"jobs":93860,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":8,"exposure_rationale":"Legal secretarial work involves document preparation, filing, and correspondence — tasks increasingly automated by AI.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=73502"},{"title_de":"Controller/in","title_en":"Financial Controller","slug":"controller-in","kldb_code":"72602","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":66751,"jobs":86284,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Controlling is analytical knowledge work — budgeting, variance analysis, reporting. AI excels at these pattern-recognition tasks.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=72602"},{"title_de":"Wirtschaftsprüfer/in","title_en":"Auditor","slug":"wirtschaftspruefer-in","kldb_code":"71504","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":80948,"jobs":43126,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":7,"exposure_rationale":"Auditing is predominantly digital analytical work — reviewing financial records, testing controls, and reporting. AI is automating audit procedures.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=71504"},{"title_de":"Datenschutzbeauftragte/r","title_en":"Data Protection Officer","slug":"datenschutzbeauftragte-r","kldb_code":"73404","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":62307,"jobs":34971,"outlook":12,"outlook_desc_de":"Starker Fachkräftemangel","outlook_desc_en":"Severe Shortage","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":5,"exposure_rationale":"Data protection combines legal knowledge with technical understanding. AI helps with compliance monitoring but human judgment drives policy decisions.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=73404"},{"title_de":"Notar/in","title_en":"Notary Public","slug":"notar-in","kldb_code":"73204","category_de":"Unternehmensorganisation, Buchhaltung, Recht und Verwaltung","category_en":"Corporate Organisation, Accounting, Law and Administration","pay":83364,"jobs":7788,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":6,"exposure_rationale":"Notarial work involves document review, legal verification, and physical witnessing. AI helps with research but the attestation role requires human presence.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=73204"},{"title_de":"Fachkraft für Lagerlogistik","title_en":"Warehouse Logistics Specialist","slug":"fachkraft-fuer-lagerlogistik","kldb_code":"51302","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":32225,"jobs":738599,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Warehouse work is physical but increasingly assisted by automation and robotics. AI optimizes logistics but manual handling persists.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=51302"},{"title_de":"Berufskraftfahrer/in","title_en":"Professional Driver","slug":"berufskraftfahrer-in","kldb_code":"52102","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":33326,"jobs":578569,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Driving is physical and requires real-time presence. Autonomous vehicles may eventually impact this but current AI exposure is moderate.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=52102"},{"title_de":"Polizist/in (gehobener Dienst)","title_en":"Police Officer","slug":"polizist-in-gehobener-dienst","kldb_code":"53102","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":48294,"jobs":305587,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Spezialist (Meister/Techniker/Fachwirt)","education_en":"Master craftsman / Technician (Spezialist)","education_level":3,"exposure":3,"exposure_rationale":"Policing requires physical presence, real-time judgment, and interpersonal skills. AI may assist with analytics but cannot replace patrol and investigation.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=53102"},{"title_de":"Sicherheitsfachkraft","title_en":"Security Guard","slug":"sicherheitsfachkraft","kldb_code":"54102","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":28817,"jobs":258786,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Helfer (keine formale Ausbildung)","education_en":"No formal qualification (Helfer)","education_level":1,"exposure":2,"exposure_rationale":"Security requires physical presence and observation. AI enhances surveillance but guards remain necessary for response.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=54102"},{"title_de":"Speditionskaufmann/-frau","title_en":"Freight Forwarding Clerk","slug":"speditionskaufmann-frau","kldb_code":"51102","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":37618,"jobs":162222,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Freight forwarding involves significant paperwork, documentation, and coordination — tasks increasingly automatable by AI.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=51102"},{"title_de":"Busfahrer/in","title_en":"Bus Driver","slug":"busfahrer-in","kldb_code":"52302","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":32573,"jobs":122644,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Bus driving requires physical presence and passenger interaction. Autonomous buses are being tested but mass adoption is distant.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=52302"},{"title_de":"Kaufmann/-frau für Spedition","title_en":"Shipping and Logistics Clerk","slug":"kaufmann-frau-fuer-spedition","kldb_code":"51202","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":36181,"jobs":121630,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":6,"exposure_rationale":"Logistics clerking involves route planning, customs documentation, and tracking — areas where AI automation is accelerating.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=51202"},{"title_de":"Feuerwehrmann/-frau","title_en":"Firefighter","slug":"feuerwehrmann-frau","kldb_code":"53132","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":42355,"jobs":107506,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":1,"exposure_rationale":"Firefighting is dangerous physical work requiring immediate human response in unpredictable environments. AI exposure is minimal.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=53132"},{"title_de":"Postbote/Postbotin","title_en":"Mail Carrier","slug":"postbote-postbotin","kldb_code":"51402","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":28773,"jobs":92419,"outlook":-4,"outlook_desc_de":"Leichter Überhang","outlook_desc_en":"Moderate Surplus","education_de":"Helfer (keine formale Ausbildung)","education_en":"No formal qualification (Helfer)","education_level":1,"exposure":2,"exposure_rationale":"Mail delivery is physical outdoor work requiring route navigation and package handling.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=51402"},{"title_de":"Zugführer/in","title_en":"Train Driver","slug":"zugfuehrer-in","kldb_code":"52202","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":40562,"jobs":46244,"outlook":6,"outlook_desc_de":"Fachkräftemangel","outlook_desc_en":"Shortage","education_de":"Fachkraft (Ausbildung)","education_en":"Vocational training (Fachkraft)","education_level":2,"exposure":3,"exposure_rationale":"Train driving requires monitoring and real-time response. Automation is advancing but human oversight remains for safety.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=52202"},{"title_de":"Pilot/in","title_en":"Pilot","slug":"pilot-in","kldb_code":"52502","category_de":"Verkehr, Logistik, Schutz und Sicherheit","category_en":"Transport, Logistics, Security and Safety","pay":99726,"jobs":25014,"outlook":2,"outlook_desc_de":"Ausgeglichen","outlook_desc_en":"Balanced","education_de":"Experte (Hochschulabschluss)","education_en":"University degree (Experte)","education_level":4,"exposure":4,"exposure_rationale":"Aviation requires physical presence and real-time judgment. Autopilot assists but takeoff, landing, and emergencies need human pilots.","url":"https://berufenet.arbeitsagentur.de/berufenet/faces/index?path=null/suchergebnisse&such=52502"}];
+const EMBEDDED_EU = {"total_eu_employment":213700000,"de_share_of_eu":0.215,"avg_ai_exposure_eu_est":3.9,"countries_comparison":[{"code":"DE","name_de":"Deutschland","name_en":"Germany","employment":45900000,"ai_exposure_est":3.8},{"code":"FR","name_de":"Frankreich","name_en":"France","employment":30100000,"ai_exposure_est":3.9},{"code":"NL","name_de":"Niederlande","name_en":"Netherlands","employment":9700000,"ai_exposure_est":4.2},{"code":"PL","name_de":"Polen","name_en":"Poland","employment":17300000,"ai_exposure_est":3.4},{"code":"IT","name_de":"Italien","name_en":"Italy","employment":25600000,"ai_exposure_est":3.5},{"code":"ES","name_de":"Spanien","name_en":"Spain","employment":21200000,"ai_exposure_est":3.6},{"code":"SE","name_de":"Schweden","name_en":"Sweden","employment":5300000,"ai_exposure_est":4.3},{"code":"AT","name_de":"Österreich","name_en":"Austria","employment":4500000,"ai_exposure_est":3.7}]};
+
+(function init() {
+  allData = EMBEDDED_DATA;
+  data = EMBEDDED_DATA;
+  euContext = EMBEDDED_EU;
+  applyLang();
+  drawGradientLegend();
+  drawOutlookLegend();
+  applyTheme();
+  resize();
+})();
+
+window.addEventListener("resize", resize);
+</script>
+</body>
+</html>

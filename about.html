@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodik — KI-Exposition des deutschen Arbeitsmarktes</title>
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #1a1a2e;
+  line-height: 1.7;
+  background: #f8f8fc;
+}
+h1 { font-size: 24px; margin-bottom: 8px; }
+h2 { font-size: 18px; margin-top: 32px; }
+.back { font-size: 13px; color: #0070f3; text-decoration: none; }
+.back:hover { text-decoration: underline; }
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+.stat-card {
+  background: #fff;
+  border: 1px solid #e0e0e8;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-card .num { font-size: 28px; font-weight: 700; color: #0070f3; }
+.stat-card .label { font-size: 12px; color: #6b6b80; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e0e0e8; }
+th { font-weight: 600; background: #f0f0f5; }
+code { background: #eee; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← Zurück zur Visualisierung / Back to visualization</a>
+
+<h1>Methodik / Methodology</h1>
+<p>Dieses Tool visualisiert die KI-Exposition des deutschen Arbeitsmarktes anhand der <strong>KldB 2010</strong> (Klassifikation der Berufe) mit Daten der Bundesagentur für Arbeit, Destatis und Eurostat.</p>
+<p>This tool visualizes the AI exposure of the German job market using the <strong>KldB 2010</strong> (Classification of Occupations) with data from the Federal Employment Agency, the Federal Statistical Office, and Eurostat.</p>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="num" id="statOccupations">—</div>
+    <div class="label">Berufe / Occupations</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" id="statEmployment">—</div>
+    <div class="label">Beschäftigte / Employed</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" id="statAvgScore">—</div>
+    <div class="label">Ø KI-Exposition / Avg AI Exposure</div>
+  </div>
+</div>
+
+<h2>Datenquellen / Data Sources</h2>
+<table>
+  <tr><th>Quelle / Source</th><th>Daten / Data</th><th>Lizenz / License</th></tr>
+  <tr><td>Bundesagentur für Arbeit</td><td>KldB 2010, Entgeltatlas, Engpassanalyse</td><td>DL-DE/BY-2.0</td></tr>
+  <tr><td>Destatis (GENESIS)</td><td>Erwerbstätige nach Berufsgruppen</td><td>DL-DE/BY-2.0</td></tr>
+  <tr><td>Eurostat</td><td>EU-weite Beschäftigungsstatistiken (ISCO-08)</td><td>Eurostat Copyright</td></tr>
+  <tr><td>OpenAI GPT-4o-mini</td><td>KI-Expositions-Scores (0–10) mit Begründung</td><td>—</td></tr>
+</table>
+
+<h2>KI-Expositions-Scoring / AI Exposure Scoring</h2>
+<p>Jeder Beruf wird von einem LLM (GPT-4o-mini) auf einer Skala von 0–10 bewertet. Das Scoring berücksichtigt:</p>
+<p>Each occupation is scored by an LLM (GPT-4o-mini) on a 0–10 scale. The scoring considers:</p>
+<table>
+  <tr><th>Score</th><th>Bedeutung / Meaning</th><th>Beispiele / Examples</th></tr>
+  <tr><td>0–1</td><td>Minimal: Rein physische Arbeit</td><td>Dachdecker, Feuerwehr</td></tr>
+  <tr><td>2–3</td><td>Niedrig: Überwiegend physisch</td><td>Elektriker, Krankenpfleger</td></tr>
+  <tr><td>4–5</td><td>Moderat: Mix physisch/digital</td><td>Arzt, Polizist, Lehrer</td></tr>
+  <tr><td>6–7</td><td>Hoch: Überwiegend Wissensarbeit</td><td>Steuerberater, Manager</td></tr>
+  <tr><td>8–9</td><td>Sehr hoch: Fast rein digital</td><td>Softwareentwickler, Designer</td></tr>
+  <tr><td>10</td><td>Maximum: Routine-Datenverarbeitung</td><td>Dateneingabe, Telemarketing</td></tr>
+</table>
+
+<h2>Deutsche Besonderheiten / German Specificities</h2>
+<p>Der deutsche Arbeitsmarkt unterscheidet sich vom nordamerikanischen in mehrfacher Hinsicht:</p>
+<ul style="margin:12px 0;padding-left:24px;">
+  <li><strong>Duales Ausbildungssystem:</strong> ~50% der Beschäftigten haben eine Berufsausbildung (vs. College-Abschluss in Kanada/USA)</li>
+  <li><strong>Betriebsräte & Mitbestimmung:</strong> Stärkerer Arbeitnehmerschutz dämpft schnelle Umstrukturierungen</li>
+  <li><strong>EU AI Act:</strong> Regulierung beeinflusst den Einsatz von KI in bestimmten Berufsfeldern</li>
+  <li><strong>Fachkräftemangel:</strong> Deutschland hat in vielen Branchen einen strukturellen Arbeitskräftemangel</li>
+  <li><strong>Industrie-Fokus:</strong> Stärkerer Anteil an Produktion und Fertigung als in angelsächsischen Ländern</li>
+</ul>
+
+<h2>Datenpipeline / Data Pipeline</h2>
+<p>Die Pipeline besteht aus folgenden Schritten:</p>
+<ol style="margin:12px 0;padding-left:24px;font-size:14px;">
+  <li><code>fetch_kldb.py</code> — Abruf der KldB-Berufsklassifikation</li>
+  <li><code>fetch_employment.py</code> — Beschäftigungsdaten von Destatis</li>
+  <li><code>fetch_wages.py</code> — Gehaltsdaten vom Entgeltatlas</li>
+  <li><code>fetch_outlook.py</code> — Engpassanalyse der Bundesagentur</li>
+  <li><code>fetch_eurostat.py</code> — EU-Vergleichsdaten von Eurostat</li>
+  <li><code>score_de.py</code> — LLM-basierte KI-Expositions-Bewertung</li>
+  <li><code>build_site_data_de.py</code> — Zusammenführung für das Frontend</li>
+</ol>
+
+<h2>EU-Kontext / EU Context</h2>
+<p>Deutschland stellt mit ~45,9 Mio. Erwerbstätigen etwa 21,5% der EU-Gesamtbeschäftigung (~213,7 Mio.). Die geschätzten KI-Expositionswerte im EU-Vergleich zeigen, dass Länder mit höherem Dienstleistungsanteil (z.B. Niederlande, Schweden) tendenziell höhere Durchschnittswerte aufweisen.</p>
+
+<script>
+fetch("data.json").then(r=>r.json()).then(d=>{
+  document.getElementById("statOccupations").textContent = d.length;
+  const total = d.reduce((s,x)=>s+(x.jobs||0),0);
+  document.getElementById("statEmployment").textContent = (total/1e6).toFixed(1)+"M";
+  let ws=0,wc=0;
+  for(const x of d){if(x.exposure!=null&&x.jobs){ws+=x.exposure*x.jobs;wc+=x.jobs;}}
+  document.getElementById("statAvgScore").textContent = wc>0?(ws/wc).toFixed(1):"—";
+});
+</script>
+</body>
+</html>
