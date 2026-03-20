@@ -3,9 +3,7 @@
 
 An interactive visualization mapping **133 German occupations** by their exposure to artificial intelligence, adapted for the German and European labor market context.
 
-**[Live Demo →](#)** *(deploy to GitHub Pages after cloning)*
-
-![Treemap View](docs/screenshot-treemap.png)
+**[Live Demo →](https://hardelean.github.io/german-job-market-ai/)**
 
 ---
 
