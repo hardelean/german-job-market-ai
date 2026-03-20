@@ -1,0 +1,63 @@
+{
+  "total_eu_employment": 213700000,
+  "de_share_of_eu": 0.215,
+  "avg_ai_exposure_eu_est": 3.9,
+  "countries_comparison": [
+    {
+      "code": "DE",
+      "name_de": "Deutschland",
+      "name_en": "Germany",
+      "employment": 45900000,
+      "ai_exposure_est": 3.8
+    },
+    {
+      "code": "FR",
+      "name_de": "Frankreich",
+      "name_en": "France",
+      "employment": 30100000,
+      "ai_exposure_est": 3.9
+    },
+    {
+      "code": "NL",
+      "name_de": "Niederlande",
+      "name_en": "Netherlands",
+      "employment": 9700000,
+      "ai_exposure_est": 4.2
+    },
+    {
+      "code": "PL",
+      "name_de": "Polen",
+      "name_en": "Poland",
+      "employment": 17300000,
+      "ai_exposure_est": 3.4
+    },
+    {
+      "code": "IT",
+      "name_de": "Italien",
+      "name_en": "Italy",
+      "employment": 25600000,
+      "ai_exposure_est": 3.5
+    },
+    {
+      "code": "ES",
+      "name_de": "Spanien",
+      "name_en": "Spain",
+      "employment": 21200000,
+      "ai_exposure_est": 3.6
+    },
+    {
+      "code": "SE",
+      "name_de": "Schweden",
+      "name_en": "Sweden",
+      "employment": 5300000,
+      "ai_exposure_est": 4.3
+    },
+    {
+      "code": "AT",
+      "name_de": "Österreich",
+      "name_en": "Austria",
+      "employment": 4500000,
+      "ai_exposure_est": 3.7
+    }
+  ]
+}
